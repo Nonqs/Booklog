@@ -1,9 +1,10 @@
 import { useState } from "react"
+import { AddBook } from "../components/AddBook"
 
 export function SearchBook() {
 
   const [book, setBook] = useState('')
-  const [bookData, setBookData] = useState([])
+  const [bookData, setBookData] = useState()
   const [show, setShow] = useState(false)
 
   const handleSubmit = async (e) => {
@@ -23,6 +24,12 @@ export function SearchBook() {
 
   }
 
+  const handleClick = (book) =>{
+
+    console.log(book)
+
+  }
+
   return (
     <>
       <div>
@@ -38,12 +45,13 @@ export function SearchBook() {
       {show && (
         <div>
           <h3>Libros encontrados:</h3>
-          {bookData.books.map((book, index) => (
-            <div key={index}>
-              <h3>{book.name}</h3>
-              <p>Páginas: {book.pages}</p>
-            </div>
-          ))}
+          {bookData.books && bookData.books.map((book, index) => (
+      <div key={index}>
+        <h3>{book.name}</h3>
+        <p>Páginas: {book.pages}</p>
+        <AddBook book={book} /> 
+      </div>
+    ))}
         </div>
       )}
     </>

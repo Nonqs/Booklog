@@ -1,5 +1,23 @@
+import { Outlet, Link } from "react-router-dom"
 
-
-export function Navbar(){
-    
+export function Navbar() {
+    return (
+        <div>
+            <nav>
+                <ul>
+                    <li>
+                        <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                        <Link to="/search">search</Link>
+                    </li>
+                    <li>
+                        <Link to="/form">Form</Link>
+                    </li>
+                </ul>
+            </nav>
+            <hr />
+            <Outlet />
+        </div>
+    )
 }
