@@ -1,23 +1,36 @@
 import { Outlet, Link } from "react-router-dom"
 
 export function Navbar() {
-    return (
-        <div>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/search">search</Link>
-                    </li>
-                    <li>
-                        <Link to="/form">Form</Link>
-                    </li>
+  return (
+    <div>
+      <nav className="navbar navbar-expand-lg bg-body-tertiary shadow p-2">
+        <div className="container-fluid d-flex">
+          <Link className="navbar-brand p-2" to="/"><h1>Booknest</h1></Link>
+          <div className=" p-2 " id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <Link className="nav-link active" aria-current="page" to="/search">Search book</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/library">My library</Link>
+              </li>
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Profile
+                </a>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="/login">Login</a></li>
+                  <li><a className="dropdown-item" href="/signup">Signup</a></li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li><a className="dropdown-item" href="#">Logout</a></li>
                 </ul>
-            </nav>
-            <hr />
-            <Outlet />
+              </li>
+            </ul>
+          </div>
         </div>
-    )
+      </nav>
+      
+      <Outlet />
+    </div>
+  )
 }

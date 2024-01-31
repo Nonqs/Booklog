@@ -1,0 +1,18 @@
+
+.container-1{
+    text-align: center;
+}
+.container-2{
+    align-items: center;
+    justify-content: center;
+}
+
+.input{
+    width: 25%;
+}
+
+.info{
+    align-items: center;
+    justify-content: center;  
+}
+

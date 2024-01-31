@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Container, Col, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+import { Modal, ModalHeader, ModalBody, ModalFooter, Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 import "../styles/AddBook.css"
 import axios from "axios"
 
@@ -13,6 +13,7 @@ export function AddBook({ book, direction, ...args }) {
     const [state, setState] = useState("Reading")
     const [stateRating, setStateRating] = useState("Not Rated")
     const [pages, setPages] = useState(0)
+    const [err, setErr] = useState()
 
     const onCancel = () => {
 
@@ -20,6 +21,7 @@ export function AddBook({ book, direction, ...args }) {
         setState("Reading")
         setStateRating("Not Rated")
         setPages(0)
+        setErr()
 
     }
 
@@ -28,7 +30,7 @@ export function AddBook({ book, direction, ...args }) {
 
         setModal(!modal)
         try {
-        
+
             const response = await axios.post("http://localhost:3000/search/add", {
 
                 bookName: book.name,
@@ -40,38 +42,54 @@ export function AddBook({ book, direction, ...args }) {
                 pages: pages
 
             })
-            
+
         } catch (error) {
             console.error("Error saving book:", error);
         }
 
     }
 
+    const handleChange = (e) => {
+
+        const newPage = parseInt(e.target.value)
+        setErr()
+
+        if (newPage <= book.pages) {
+            setPages(newPage)
+
+        } else if (!newPage) {
+            setPages(0)
+        } else {
+            console.log(newPage)
+            setErr("There can be no more pages read than total pages")
+        }
+    }
+
     return (
         <div>
-            <button type="button" className="btn btn-success" onClick={()=>{setModal(!modal)}}>Add</button>
-            <Modal centered={true} isOpen={modal} toggle={() => { setModal(!modal) }} {...args}>
-                <ModalHeader toggle={() => { setModal(!modal) }}>Add book</ModalHeader>
+            <button type="button" className="btn btn-success" onClick={() => { setModal(!modal) }}>Add</button>
+            <Modal size="lg" centered="true" isOpen={modal} toggle={() => { setModal(!modal) }} {...args}>
+                <ModalHeader toggle={onCancel}>Add book</ModalHeader>
                 <ModalBody className="modal-container">
-                    <Container centered={true}>
-                        <Row xs="1" sm="2" md="4">
-                            <Col className="conatiner-col-1" lg="5" sm="3" md="2" >
-                                <img src={book.image} alt="book image" />
-                                <h3>{book.name}</h3>
-                                <Dropdown isOpen={dropdownOpen} toggle={() => { setDropdownOpen(!dropdownOpen) }} direction={direction}>
-                                    <DropdownToggle caret>{state}</DropdownToggle>
-                                    <DropdownMenu {...args}>
-                                        <DropdownItem onClick={() => { setState("Complete"); setPages(book.pages) }}>Complete</DropdownItem>
-                                        <DropdownItem onClick={() => { setState("Plan to read") }}>Plan to read</DropdownItem>
-                                        <DropdownItem onClick={() => { setState("Dropped") }}>Dropped</DropdownItem>
-                                    </DropdownMenu>
-                                </Dropdown>
-                            </Col>
-                            <Col md="2">
+                    <Container>
+                        <div className="d-flex">
+                        <div className="container-1 shadow p-3 bg-body-tertiary rounded" >
+                            <img src={book.image} alt="book image" />
+                            <h3>{book.name}</h3>
+                            <Dropdown isOpen={dropdownOpen} toggle={() => { setDropdownOpen(!dropdownOpen) }} direction={direction}>
+                                <DropdownToggle caret>{state}</DropdownToggle>
+                                <DropdownMenu {...args}>
+                                    <DropdownItem onClick={() => { setState("Complete"); setPages(book.pages) }}>Complete</DropdownItem>
+                                    <DropdownItem onClick={() => { setState("Plan to read") }}>Plan to read</DropdownItem>
+                                    <DropdownItem onClick={() => { setState("Dropped") }}>Dropped</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
 
-                                <article>
-                                    <h3>Rating</h3>
-                                    <Dropdown isOpen={dropdownOpenRating} toggle={() => { setDropdownOpenRating(!dropdownOpenRating) }} direction={direction}>
+                        </div>
+                        <div className="container-2 ms-4">
+                              <article className="d-flex">
+                                    <h4 className="me-2">Rating</h4>
+                                    <Dropdown className="p-0" isOpen={dropdownOpenRating} toggle={() => { setDropdownOpenRating(!dropdownOpenRating) }} direction={direction}>
                                         <DropdownToggle caret>{stateRating}</DropdownToggle>
                                         <DropdownMenu {...args}>
                                             <DropdownItem onClick={() => { setStateRating("No Rated") }}>Not Rated</DropdownItem>
@@ -89,18 +107,28 @@ export function AddBook({ book, direction, ...args }) {
                                         </DropdownMenu>
                                     </Dropdown>
                                 </article>
-                                <article className="">
-                                    <label htmlFor="pages">Total pages read</label>
-                                    <input type="number" name="pages" value={pages} />
-                                    <p>/ {book.pages}</p>
+                            <div className="d-flex mt-3 info">
+
+                                <article>
+                                    <h4 htmlFor="pages" className="me-1">Total pages read: </h4>
+                                    <input type="number" className="input" name="pages" placeholder={pages} onChange={handleChange} />
+                                    <span className="ms-1">/ {book.pages}</span>
                                 </article>
-                            </Col>
-                        </Row>
+
+                            </div>
+                            {err &&
+                                <div className="alert alert-danger w-100" role="alert">
+                                    {err}
+                                </div>
+                            }
+
+                        </div>
+                        </div>
                     </Container>
                 </ModalBody>
                 <ModalFooter>
-                <button type="button" className="btn btn-danger" onClick={onCancel}>Cancel</button>
-                    <button type="button" className="btn btn-success"  onClick={onSave}>
+                    <button type="button" className="btn btn-danger" onClick={onCancel}>Cancel</button>
+                    <button type="button" className="btn btn-success" onClick={onSave}>
                         Save
                     </button>{' '}
                 </ModalFooter>

@@ -1,0 +1,23 @@
+.form-container{
+    width: 100%;
+    text-align: center;
+    margin-top:2em ;
+}
+
+.form{
+    display: flex;
+    justify-content: center;
+}
+
+.books-container{
+
+   width: 100%;
+   justify-content: center;
+
+}
+
+.card-container{
+    margin: 20px;
+    width: 600px;
+    
+}
