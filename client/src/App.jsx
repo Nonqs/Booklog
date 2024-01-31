@@ -1,8 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import './App.css'
-import { Form } from "./views/Form"
+import { Signup } from "./views/Signup"
 import { SearchBook } from "./views/SearchBook"
 import { Navbar } from "./components/Navbar"
+import { MyLibrary } from "./views/MyLibrary"
+import { Login } from "./views/Login"
 
 function App() {
 
@@ -10,8 +12,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navbar />}>
-          <Route path="/form" element={<Form />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/search" element={<SearchBook />} />
+          <Route path="/library" element={<MyLibrary />} />
+          <Route path="/login" element={<Login />} />
         </Route>
       </Routes>
     </BrowserRouter>
