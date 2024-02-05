@@ -1,10 +1,12 @@
 import { useState } from "react"
 import axios from "axios"
+import { Navigate } from "react-router-dom"
 
 export function Login() {
 
   const [user, setUser] = useState()
   const [password, setPassword] = useState()
+  const [success, setSuccess] = useState()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -17,6 +19,8 @@ export function Login() {
           password,
 
       })
+
+      setSuccess(true)
 
   } catch (error) {
       console.error("Error saving book:", error);
@@ -42,6 +46,9 @@ export function Login() {
           </form>
         </div>
       </div>
+      {success &&
+      <Navigate to="/library" />
+      }
     </>
   )
 }

@@ -3,8 +3,6 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Container, Dropdown, Dropdo
 import "../styles/AddBook.css"
 import axios from "axios"
 
-//Ventana modal
-// Cancel lleva todo los usestate a default
 export function AddBook({ book, direction, ...args }) {
 
     const [modal, setModal] = useState(false)
@@ -14,6 +12,8 @@ export function AddBook({ book, direction, ...args }) {
     const [stateRating, setStateRating] = useState("Not Rated")
     const [pages, setPages] = useState(0)
     const [err, setErr] = useState()
+
+
 
     const onCancel = () => {
 
@@ -73,21 +73,33 @@ export function AddBook({ book, direction, ...args }) {
                 <ModalBody className="modal-container">
                     <Container>
                         <div className="d-flex">
-                        <div className="container-1 shadow p-3 bg-body-tertiary rounded" >
-                            <img src={book.image} alt="book image" />
-                            <h3>{book.name}</h3>
-                            <Dropdown isOpen={dropdownOpen} toggle={() => { setDropdownOpen(!dropdownOpen) }} direction={direction}>
-                                <DropdownToggle caret>{state}</DropdownToggle>
-                                <DropdownMenu {...args}>
-                                    <DropdownItem onClick={() => { setState("Complete"); setPages(book.pages) }}>Complete</DropdownItem>
-                                    <DropdownItem onClick={() => { setState("Plan to read") }}>Plan to read</DropdownItem>
-                                    <DropdownItem onClick={() => { setState("Dropped") }}>Dropped</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
+                            <div className="container-1 shadow p-3 bg-body-tertiary rounded w-100" >
+                                <div className="d-flex flex-column m-4">
+                                    {book.image
+                                        ? < img className="mt-4 mb-4 rounded mx-auto d-block" src={book.image} alt="book image" />
+                                        : <input onChange={(e) => { book.image = e.target.value }} className="mt-4 mb-4" type="text" placeholder="Cover of the book (URL)" />
+                                    }
+                                    {book.name
+                                        ? <h3>{book.name}</h3>
+                                        : <input onChange={(e) => { book.name = e.target.value }} className="mb-4" type="text" placeholder="Book name" />
+                                    }
+                                    {book.pages === 0 &&
+                                        <input onChange={(e) => { book.pages = e.target.value }} type="number" placeholder="Total pages" />
+                                    }
+                                </div>
+                                <Dropdown isOpen={dropdownOpen} toggle={() => { setDropdownOpen(!dropdownOpen) }} direction={direction}>
+                                    <DropdownToggle caret>{state}</DropdownToggle>
+                                    <DropdownMenu {...args}>
+                                        <DropdownItem onClick={() => { setState("Complete"); setPages(book.pages) }}>Complete</DropdownItem>
+                                        <DropdownItem onClick={() => { setState("Reading"); setPages(book.pages) }}>Reading</DropdownItem>
+                                        <DropdownItem onClick={() => { setState("Plan to read") }}>Plan to read</DropdownItem>
+                                        <DropdownItem onClick={() => { setState("Dropped") }}>Dropped</DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
 
-                        </div>
-                        <div className="container-2 ms-4">
-                              <article className="d-flex">
+                            </div>
+                            <div className="container-2 ms-4">
+                                <article className="d-flex">
                                     <h4 className="me-2">Rating</h4>
                                     <Dropdown className="p-0" isOpen={dropdownOpenRating} toggle={() => { setDropdownOpenRating(!dropdownOpenRating) }} direction={direction}>
                                         <DropdownToggle caret>{stateRating}</DropdownToggle>
@@ -107,22 +119,26 @@ export function AddBook({ book, direction, ...args }) {
                                         </DropdownMenu>
                                     </Dropdown>
                                 </article>
-                            <div className="d-flex mt-3 info">
+                                <div className="d-flex mt-3 info">
 
-                                <article>
-                                    <h4 htmlFor="pages" className="me-1">Total pages read: </h4>
-                                    <input type="number" className="input" name="pages" placeholder={pages} onChange={handleChange} />
-                                    <span className="ms-1">/ {book.pages}</span>
-                                </article>
+                                    <article>
+                                        <h4 htmlFor="pages" className="me-1">Total pages read: </h4>
+                                        <input type="number" className="input" name="pages" placeholder={pages} onChange={handleChange} />
+                                        {book.pages === 0
+
+                                            ? <span className="ms-1"></span>
+                                            : <span className="ms-1">/ {book.pages}</span>
+                                        }
+                                    </article>
+
+                                </div>
+                                {err &&
+                                    <div className="alert alert-danger w-100" role="alert">
+                                        {err}
+                                    </div>
+                                }
 
                             </div>
-                            {err &&
-                                <div className="alert alert-danger w-100" role="alert">
-                                    {err}
-                                </div>
-                            }
-
-                        </div>
                         </div>
                     </Container>
                 </ModalBody>
