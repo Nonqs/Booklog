@@ -2,9 +2,6 @@ const axios = require("axios")
 
 const searchBook = async (search) => {
 
-    console.log(search)
-
-
     if (search === '') return null
 
     try {
@@ -22,7 +19,6 @@ const searchBook = async (search) => {
                 pages: book.volumeInfo.pageCount
             }))
 
-            console.log(mappedBooks)
             return mappedBooks
 
         } else {

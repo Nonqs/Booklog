@@ -1,34 +1,35 @@
 const express = require("express")
-const searchBook = require("../externalApi.js")
+const passport = require("passport")
 
 const router = express.Router()
 
-router.get("/form", (req, res)=>{
-    res.send("j")
-})
 
-router.post('/form', (req, res) => {
-    const { usuario } = req.body;
-    console.log(usuario)
-    res.json({ mensaje: `Usuario recibido: ${usuario}` });
+
+router.post('/signup', (req, res, next) => {
+    passport.authenticate('local.signup', (err, user, info) => {
+        if (err) { return next(err); }
+        if (!user) { 
+            
+            return res.status(400).send(info.message);
+        }
+        
+        return res.send("User registered successfully");
+    })(req, res, next);
 });
 
-router.post("/search", async(req,res)=>{
-
-    const { book } = req.body
-
-    try {
-        
-        const books = await searchBook(book)
-
-        res.json({ books })
-
-    } catch (error) {
-
-        res.status(500).json({ message: 'Error searching books' })
-
-    }
-
-})
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local.login', (err, user, info) => {
+        if (err) { return next(err); }
+        if (!user) { 
+            // El inicio de sesión falló
+            return res.status(400).send(info.message);
+        }
+        // El inicio de sesión fue exitoso
+        req.login(user, (err) => {
+            if (err) { return next(err); }
+            return res.redirect("/library")
+        });
+    })(req, res, next);
+});
 
 module.exports = router
